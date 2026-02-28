@@ -456,7 +456,7 @@
     }
     .game-hud {
       width: 100%;
-      max-width: 600px;
+      max-width: 420px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -473,7 +473,7 @@
     #game-canvas {
       display: block;
       width: 100%;
-      max-width: 600px;
+      max-width: 420px;
       cursor: pointer;
       image-rendering: pixelated;
       image-rendering: crisp-edges;
@@ -950,11 +950,11 @@
   /* ==============================================
      GAME ENGINE
   ============================================== */
-  const GW = 600, GH = 300;
-  const GROUND_Y = 230;
+  const GW = 360, GH = 520;
+  const GROUND_Y = 430;
   const GRAVITY  = 0.65;
-  const JUMP_VY  = [-14.5, -12];   // 1st jump, 2nd jump
-  const PW = 36,  PH = 52;
+  const JUMP_VY  = [-15.5, -12.5];  // 1st jump, 2nd jump (세로 캔버스에서 높이 보정)
+  const PW = 40,  PH = 58;
 
   let gCtx, gAnimId = null;
   let gameState = 'idle';
@@ -963,7 +963,7 @@
   let spawnTimer = 0;
   let obstacles = [], gameStars = [];
 
-  const player = { x: 70, y: GROUND_Y - PH, vy: 0, jumpCount: 0, frame: 0 };
+  const player = { x: 58, y: GROUND_Y - PH, vy: 0, jumpCount: 0, frame: 0 };
 
   /* 게임용 캐릭터 이미지 미리 로드 (_right.png) */
   const charImgs = CHAR_DATA.map(d => {
@@ -986,7 +986,7 @@
     gameState = 'idle';
 
     gameStars = [];
-    for (let i = 0; i < 70; i++) {
+    for (let i = 0; i < 120; i++) {
       gameStars.push({
         x: Math.random() * GW,
         y: Math.random() * GROUND_Y * 0.95,
@@ -1136,7 +1136,7 @@
     ctx.restore();
 
     /* === 달 (왼쪽 상단) === */
-    const mx = 72, my = 43, mr = 22;
+    const mx = 62, my = 55, mr = 26;
     ctx.save();
     /* 달 글로우 */
     const mGlow = ctx.createRadialGradient(mx, my, 0, mx, my, mr + 24);
@@ -1167,7 +1167,7 @@
     ctx.restore();
 
     /* === 행성 (오른쪽 상단) === */
-    const px = 504, py = 54, pr = 30;
+    const px = 288, py = 62, pr = 28;
     ctx.save();
     /* 행성 글로우 */
     const pGlow = ctx.createRadialGradient(px, py, 0, px, py, pr + 22);
