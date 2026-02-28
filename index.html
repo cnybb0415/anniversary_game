@@ -572,6 +572,7 @@
     }
     .lb-row:last-child { border-bottom: none; }
     .lb-row.me { color: #ffd700; background: rgba(255,215,0,0.09); border-radius: 3px; }
+    .lb-row.lb-dots { justify-items: center; color: rgba(255,255,255,0.3); border-bottom: none; padding: 2px 0; }
     .lb-rank { color: #6bcfff; }
     .lb-char { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .lb-sc   { color: #ff9bd0; text-align: right; }
@@ -806,11 +807,14 @@
     const now = new Date();
     const dt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
     const url = `${SCORE_API}?action=save&character=${encodeURIComponent(charName)}&score=${finalScore}&datetime=${encodeURIComponent(dt)}`;
-    fetch(url).catch(() => {});
+    /* Promise 반환 → 저장 완료 후 순위 조회하기 위해 */
+    return fetch(url).catch(() => {});
   }
 
   function fetchLeaderboard(myScore) {
     const content = document.getElementById('lb-content');
+    const myChar = CHAR_NAMES[selectedCharIdx];
+
     content.innerHTML = '<div class="lb-msg">Loading...</div>';
     fetch(`${SCORE_API}?action=load`)
       .then(r => r.json())
@@ -819,15 +823,37 @@
           content.innerHTML = '<div class="lb-msg">아직 기록이 없습니다</div>';
           return;
         }
+
+        /* 내 등수: 점수+캐릭터가 처음 일치하는 인덱스 */
+        let myRank = -1;
+        for (let i = 0; i < data.length; i++) {
+          if (Number(data[i].score) === myScore && data[i].character === myChar) {
+            myRank = i + 1;
+            break;
+          }
+        }
+
+        /* 상위 10개 출력 */
         let html = '';
         data.slice(0, 10).forEach((row, i) => {
-          const isMe = (row.score === myScore && row.character === CHAR_NAMES[selectedCharIdx]);
+          const isMe = (myRank === i + 1);
           html += `<div class="lb-row${isMe ? ' me' : ''}">
-            <span class="lb-rank">#${i+1}</span>
+            <span class="lb-rank">#${i + 1}</span>
             <span class="lb-char">${row.character || '???'}</span>
             <span class="lb-sc">${row.score}</span>
           </div>`;
         });
+
+        /* 10등 밖이면 내 등수를 구분선 아래 따로 표시 */
+        if (myRank > 10) {
+          html += `<div class="lb-row lb-dots"><span>···</span><span></span><span></span></div>`;
+          html += `<div class="lb-row me">
+            <span class="lb-rank">#${myRank}</span>
+            <span class="lb-char">${myChar}</span>
+            <span class="lb-sc">${myScore}</span>
+          </div>`;
+        }
+
         content.innerHTML = html;
       })
       .catch(() => {
@@ -1507,8 +1533,10 @@
     }
     document.getElementById('go-score-display').textContent = 'SCORE\u00a0' + score;
     document.getElementById('gameover-overlay').classList.remove('hidden');
-    submitScore(selectedCharIdx, score);
-    fetchLeaderboard(score);
+    /* 점수 저장 완료 후 순위 조회 (race condition 방지) */
+    submitScore(selectedCharIdx, score)
+      .then(() => new Promise(resolve => setTimeout(resolve, 600)))
+      .finally(() => fetchLeaderboard(score));
   }
 
   function restartGame() {
