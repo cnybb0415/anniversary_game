@@ -917,12 +917,12 @@
      CHARACTER DATA
   ============================================== */
   const CHAR_DATA = [
-    { name: 'SUHO',     power: '물',      emoji: '💧', front: 'character/suho.webp',     back: 'character/suho_back.webp',     right: 'character/suho_right.webp'     },
-    { name: 'LAY',      power: '치유',    emoji: '🌿', front: 'character/lay.webp',      back: 'character/lay_back.webp',      right: 'character/lay_right.webp'      },
-    { name: 'CHANYEOL', power: '불',      emoji: '🔥', front: 'character/chanyeol.webp', back: 'character/chanyeol_back.webp', right: 'character/chanyeol_right.webp' },
-    { name: 'D.O',      power: '힘',      emoji: '💪', front: 'character/do.webp',       back: 'character/do_back.webp',       right: 'character/do_right.webp'       },
-    { name: 'KAI',      power: '순간이동', emoji: '💫', front: 'character/kai.webp',      back: 'character/kai_back.webp',      right: 'character/kai_right.webp'      },
-    { name: 'SEHUN',    power: '바람',    emoji: '🌀', front: 'character/sehun.webp',    back: 'character/sehun_back.webp',    right: 'character/sehun_right.webp'    },
+    { name: 'SUHO',     power: '물',      emoji: '💧', front: 'character/suho.webp',     back: 'character/suho_back.webp',     right: 'character/suho_right.webp',     jump: 'character/suho_jump.webp'     },
+    { name: 'LAY',      power: '치유',    emoji: '🌿', front: 'character/lay.webp',      back: 'character/lay_back.webp',      right: 'character/lay_right.webp',      jump: 'character/lay_jump.webp'      },
+    { name: 'CHANYEOL', power: '불',      emoji: '🔥', front: 'character/chanyeol.webp', back: 'character/chanyeol_back.webp', right: 'character/chanyeol_right.webp', jump: 'character/chanyeol_jump.webp' },
+    { name: 'D.O',      power: '힘',      emoji: '💪', front: 'character/do.webp',       back: 'character/do_back.webp',       right: 'character/do_right.webp',       jump: 'character/do_jump.webp'       },
+    { name: 'KAI',      power: '순간이동', emoji: '💫', front: 'character/kai.webp',      back: 'character/kai_back.webp',      right: 'character/kai_right.webp',      jump: 'character/kai_jump.webp'      },
+    { name: 'SEHUN',    power: '바람',    emoji: '🌀', front: 'character/sehun.webp',    back: 'character/sehun_back.webp',    right: 'character/sehun_right.webp',    jump: 'character/sehun_jump.webp'    },
   ];
 
   /* ==============================================
@@ -1032,10 +1032,15 @@
 
   const player = { x: 58, y: GROUND_Y - PH, vy: 0, jumpCount: 0, frame: 0 };
 
-  /* 게임용 캐릭터 이미지 미리 로드 (_right.png) */
+  /* 게임용 캐릭터 이미지 미리 로드 */
   const charImgs = CHAR_DATA.map(d => {
     const img = new Image();
     img.src = d.right;
+    return img;
+  });
+  const charJumpImgs = CHAR_DATA.map(d => {
+    const img = new Image();
+    img.src = d.jump;
     return img;
   });
 
@@ -1296,8 +1301,13 @@
   }
 
   function drawPlayer(ctx) {
-    const img = charImgs[selectedCharIdx];
     const isAir = player.y < GROUND_Y - PH - 2;
+    /* 공중이면 jump 이미지, 아니면 right 이미지 */
+    const jumpImg = charJumpImgs[selectedCharIdx];
+    const runImg  = charImgs[selectedCharIdx];
+    const img = (isAir && jumpImg && jumpImg.complete && jumpImg.naturalWidth > 0)
+                  ? jumpImg : runImg;
+
     if (img && img.complete && img.naturalWidth > 0) {
       ctx.imageSmoothingEnabled = false;
       /* 원본 비율 유지 → 좌우 납작 방지 */
@@ -1305,16 +1315,7 @@
       const dh = PH;
       const dw = dh * aspect;
       const dx = player.x + (PW - dw) * 0.5;
-      if (isAir) {
-        /* 점프 중: 살짝 뒤로 젖혀 도약감 표현 */
-        ctx.save();
-        ctx.translate(dx + dw * 0.5, player.y + dh * 0.5);
-        ctx.rotate(-0.18);
-        ctx.drawImage(img, -dw * 0.5, -dh * 0.5, dw, dh);
-        ctx.restore();
-      } else {
-        ctx.drawImage(img, dx, player.y, dw, dh);
-      }
+      ctx.drawImage(img, dx, player.y, dw, dh);
     } else {
       drawPixelPlayer(ctx, player.x, player.y);
     }
