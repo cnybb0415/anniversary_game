@@ -792,31 +792,27 @@
 
 <script>
   /* ==============================================
-     GOOGLE SHEETS 연동 설정
-     ↓ Apps Script 웹앱 URL을 아래에 입력하세요
+     GOOGLE SHEETS 연동
+     URL은 Vercel 환경변수(APPS_SCRIPT_URL)로 관리
+     프론트엔드는 /api/score 엔드포인트를 사용
   ============================================== */
-  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6947UGKTeOd2dItIMCSVK-yuJvV9cO9xzBXEd0Cidxp1wPBBW7a5AOTa1mxzSYVyK1g/exec'; // 예: 'https://script.google.com/macros/s/xxx/exec'
+  const SCORE_API = '/api/score';
 
   const CHAR_NAMES = ['SUHO', 'LAY', 'CHANYEOL', 'D.O', 'KAI', 'SEHUN'];
   const CHAR_EMOJIS = ['💧', '🌿', '🔥', '💪', '⚡', '🌀'];
 
   function submitScore(charIdx, finalScore) {
-    if (!APPS_SCRIPT_URL) return;
     const charName = CHAR_NAMES[charIdx] || 'UNKNOWN';
     const now = new Date();
     const dt = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-    const url = `${APPS_SCRIPT_URL}?action=save&character=${encodeURIComponent(charName)}&score=${finalScore}&datetime=${encodeURIComponent(dt)}`;
+    const url = `${SCORE_API}?action=save&character=${encodeURIComponent(charName)}&score=${finalScore}&datetime=${encodeURIComponent(dt)}`;
     fetch(url).catch(() => {});
   }
 
   function fetchLeaderboard(myScore) {
     const content = document.getElementById('lb-content');
-    if (!APPS_SCRIPT_URL) {
-      content.innerHTML = '<div class="lb-msg">⚙ URL을 설정하면 랭킹이 표시됩니다</div>';
-      return;
-    }
     content.innerHTML = '<div class="lb-msg">Loading...</div>';
-    fetch(`${APPS_SCRIPT_URL}?action=load`)
+    fetch(`${SCORE_API}?action=load`)
       .then(r => r.json())
       .then(data => {
         if (!data || !data.length) {
