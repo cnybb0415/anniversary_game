@@ -1341,11 +1341,6 @@
     } else if (o.type === 'alien') {
       /* ===== 외계인 ===== */
       const cx = o.x + o.w / 2;
-      /* 글로우 */
-      ctx.save(); ctx.globalAlpha = 0.10;
-      ctx.fillStyle = '#33ff66';
-      ctx.fillRect(o.x - 3, o.y - 6, o.w + 6, o.h + 8);
-      ctx.restore();
       /* 머리 */
       ctx.fillStyle = '#33dd66';
       ctx.beginPath(); ctx.arc(cx, o.y + 12, 13, 0, Math.PI * 2); ctx.fill();
