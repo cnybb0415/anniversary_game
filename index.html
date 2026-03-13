@@ -343,14 +343,25 @@
       position: absolute;
       top: 0; left: 0;
     }
+    /* ============================================================
+       ★ 초능력 이미지 사이즈 조절 구역 ★
+       아래 숫자만 바꾸면 됩니다.
+    ============================================================ */
+
+    /* 글로우 애니메이션 투명도
+       · 최솟값 (0.0 ~ 1.0)  →  숫자 클수록 진하게 */
     @keyframes powerGlow {
-      0%, 100% { opacity: 0.32; }
-      50%       { opacity: 0.58; }
+      0%, 100% { opacity: 0.32; }   /* ← 어두울 때 투명도 */
+      50%       { opacity: 0.58; }   /* ← 밝을 때 투명도   */
     }
+
+    /* 캐릭터 프레임 안 파워 이미지 (앞·뒤 공통)
+       · width/height : 프레임 크기 대비 %, 클수록 프레임 밖으로 넘침
+         예) 170% = 프레임의 1.7배 크기 */
     .cs-char-ph {
       position: absolute !important;
-      width: 170% !important;
-      height: 170% !important;
+      width:  170% !important;   /* ★ 프레임 내 파워이미지 크기 */
+      height: 170% !important;   /* ★ 프레임 내 파워이미지 크기 */
       top: 50% !important;
       left: 50% !important;
       transform: translate(-50%, -50%) !important;
@@ -377,8 +388,10 @@
       z-index: 10;
       letter-spacing: 2px;
     }
+    /* 이름 아래 파워 이미지
+       · height : px 값, 클수록 크게 표시 */
     .cs-char-power-img {
-      height: 46px;
+      height: 80px;              /* ★ 이름 아래 파워이미지 크기 */
       object-fit: contain;
       margin-top: 6px;
       position: relative;
@@ -387,6 +400,10 @@
       animation: powerGlow 2.8s ease-in-out infinite;
       animation-delay: 1s;
     }
+
+    /* ============================================================
+       ★ 조절 구역 끝 ★
+    ============================================================ */
     .cs-char-dots {
       display: flex;
       gap: 9px;
