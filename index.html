@@ -341,19 +341,28 @@
       position: absolute;
       top: 0; left: 0;
     }
+    @keyframes powerGlow {
+      0%, 100% { opacity: 0.28; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)) brightness(1.3); }
+      50%       { opacity: 0.52; filter: drop-shadow(0 0 26px rgba(255,255,255,0.95)) brightness(1.7); }
+    }
     .cs-char-ph {
-      font-size: 46px;
       position: absolute;
+      width: 82%; height: 82%;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
+      object-fit: contain;
+      animation: powerGlow 2.8s ease-in-out infinite;
     }
     .cs-char-ph-sm {
-      font-size: 30px;
       position: absolute;
+      width: 72%; height: 72%;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
+      object-fit: contain;
+      animation: powerGlow 2.8s ease-in-out infinite;
+      animation-delay: 0.5s;
     }
     .cs-char-label {
       font-family: 'Press Start 2P', monospace;
@@ -371,13 +380,15 @@
       z-index: 10;
       letter-spacing: 2px;
     }
-    .cs-char-power {
-      font-family: 'Nanum Pen Script', cursive;
-      font-size: 22px;
-      color: rgba(255,255,255,0.65);
-      margin-top: 5px;
+    .cs-char-power-img {
+      height: 46px;
+      object-fit: contain;
+      margin-top: 6px;
       position: relative;
       z-index: 10;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.5)) brightness(1.2);
+      animation: powerGlow 2.8s ease-in-out infinite;
+      animation-delay: 1s;
     }
     .cs-char-dots {
       display: flex;
@@ -721,7 +732,7 @@
       <!-- 앞모습 (크게) -->
       <div class="cs-front-col">
         <div class="cs-char-front-wrap">
-          <span class="cs-char-ph" id="cs-ph-front">💧</span>
+          <img class="cs-char-ph" id="cs-ph-front" src="image/물.png" alt="">
           <img id="cs-front-img" src="character/suho.webp" alt="" onerror="this.style.display='none'">
         </div>
         <div class="cs-char-label">FRONT</div>
@@ -729,7 +740,7 @@
       <!-- 뒷모습 (작게) -->
       <div class="cs-back-col">
         <div class="cs-char-back-wrap">
-          <span class="cs-char-ph-sm" id="cs-ph-back">💧</span>
+          <img class="cs-char-ph-sm" id="cs-ph-back" src="image/물.png" alt="">
           <img id="cs-back-img" src="character/suho_back.webp" alt="" onerror="this.style.display='none'">
         </div>
         <div class="cs-char-label">BACK</div>
@@ -740,7 +751,7 @@
   </div><!-- /cs-carousel -->
 
   <div class="cs-char-name-big" id="cs-char-name">SUHO</div>
-  <div class="cs-char-power" id="cs-char-power">물</div>
+  <img class="cs-char-power-img" id="cs-char-power" src="image/물.png" alt="">
   <div class="cs-char-dots">
     <div class="cs-dot active"></div>
     <div class="cs-dot"></div>
@@ -917,12 +928,12 @@
      CHARACTER DATA
   ============================================== */
   const CHAR_DATA = [
-    { name: 'SUHO',     power: '물',      emoji: '💧', front: 'character/suho.webp',     back: 'character/suho_back.webp',     right: 'character/suho_right.webp',     jump: 'character/suho_jump.webp'     },
-    { name: 'LAY',      power: '치유',    emoji: '🌿', front: 'character/lay.webp',      back: 'character/lay_back.webp',      right: 'character/lay_right.webp',      jump: 'character/lay_jump.webp'      },
-    { name: 'CHANYEOL', power: '불',      emoji: '🔥', front: 'character/chanyeol.webp', back: 'character/chanyeol_back.webp', right: 'character/chanyeol_right.webp', jump: 'character/chanyeol_jump.webp' },
-    { name: 'D.O',      power: '힘',      emoji: '💪', front: 'character/do.webp',       back: 'character/do_back.webp',       right: 'character/do_right.webp',       jump: 'character/do_jump.webp'       },
-    { name: 'KAI',      power: '순간이동', emoji: '💫', front: 'character/kai.webp',      back: 'character/kai_back.webp',      right: 'character/kai_right.webp',      jump: 'character/kai_jump.webp'      },
-    { name: 'SEHUN',    power: '바람',    emoji: '🌀', front: 'character/sehun.webp',    back: 'character/sehun_back.webp',    right: 'character/sehun_right.webp',    jump: 'character/sehun_jump.webp'    },
+    { name: 'SUHO',     power: '물',      emoji: '💧', powerImg: 'image/물.png',      front: 'character/suho.webp',     back: 'character/suho_back.webp',     right: 'character/suho_right.webp',     jump: 'character/suho_jump.webp'     },
+    { name: 'LAY',      power: '치유',    emoji: '🌿', powerImg: 'image/치유.png',     front: 'character/lay.webp',      back: 'character/lay_back.webp',      right: 'character/lay_right.webp',      jump: 'character/lay_jump.webp'      },
+    { name: 'CHANYEOL', power: '불',      emoji: '🔥', powerImg: 'image/불.png',       front: 'character/chanyeol.webp', back: 'character/chanyeol_back.webp', right: 'character/chanyeol_right.webp', jump: 'character/chanyeol_jump.webp' },
+    { name: 'D.O',      power: '힘',      emoji: '💪', powerImg: 'image/힘.png',       front: 'character/do.webp',       back: 'character/do_back.webp',       right: 'character/do_right.webp',       jump: 'character/do_jump.webp'       },
+    { name: 'KAI',      power: '순간이동', emoji: '💫', powerImg: 'image/순간이동.png', front: 'character/kai.webp',      back: 'character/kai_back.webp',      right: 'character/kai_right.webp',      jump: 'character/kai_jump.webp'      },
+    { name: 'SEHUN',    power: '바람',    emoji: '🌀', powerImg: 'image/바람.png',     front: 'character/sehun.webp',    back: 'character/sehun_back.webp',    right: 'character/sehun_right.webp',    jump: 'character/sehun_jump.webp'    },
   ];
 
   /* ==============================================
@@ -936,15 +947,15 @@
     const fi = document.getElementById('cs-front-img');
     fi.style.display = '';
     fi.src = d.front;
-    document.getElementById('cs-ph-front').textContent = d.emoji;
+    document.getElementById('cs-ph-front').src = d.powerImg;
     /* 뒷모습 */
     const bi = document.getElementById('cs-back-img');
     bi.style.display = '';
     bi.src = d.back;
-    document.getElementById('cs-ph-back').textContent = d.emoji;
+    document.getElementById('cs-ph-back').src = d.powerImg;
     /* 이름 / 능력 */
     document.getElementById('cs-char-name').textContent = d.name;
-    document.getElementById('cs-char-power').textContent = d.power;
+    document.getElementById('cs-char-power').src = d.powerImg;
     /* 점 인디케이터 */
     document.querySelectorAll('.cs-dot').forEach((dot, i) => {
       dot.classList.toggle('active', i === selectedCharIdx);
@@ -1566,6 +1577,46 @@
   /* ===== 초기화: main-page만 표시 ===== */
   document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; });
   document.getElementById('main-page').style.display = 'flex';
+
+  /* ===== BGM ===== */
+  const BGM_TRACKS = [
+    "bgm/EXO-01-Crown-REVERXE - The 8th Album-16.flac",
+    "bgm/EXO-02-Back It Up-REVERXE - The 8th Album-192.mp3",
+    "bgm/EXO-03-Crazy-REVERXE - The 8th Album-192.mp3",
+    "bgm/EXO-04-Suffocate-REVERXE - The 8th Album-192.mp3",
+    "bgm/EXO-05-Moonlight Shadows-REVERXE - The 8th Album-192.mp3",
+    "bgm/EXO-06-Back Pocket-REVERXE - The 8th Album-192.mp3",
+    "bgm/EXO-07-Touch & Go-REVERXE - The 8th Album-192.mp3",
+    "bgm/EXO-08-Flatline-REVERXE - The 8th Album-192.mp3",
+    "bgm/EXO-09-I'm Home-REVERXE - The 8th Album-192.mp3",
+  ];
+  let bgmIdx = 0;
+  const bgmAudio = new Audio();
+  bgmAudio.volume = 0.45;
+
+  function bgmPlay() {
+    bgmAudio.src = BGM_TRACKS[bgmIdx];
+    bgmAudio.play().catch(() => {});
+  }
+
+  bgmAudio.addEventListener('ended', () => {
+    bgmIdx = (bgmIdx + 1) % BGM_TRACKS.length;
+    bgmPlay();
+  });
+
+  /* 첫 번째 사용자 인터랙션 때 재생 시작 (브라우저 autoplay 정책 대응) */
+  bgmAudio.src = BGM_TRACKS[0];
+  bgmAudio.play().catch(() => {
+    function bgmStart() {
+      bgmAudio.play().catch(() => {});
+      document.removeEventListener('click', bgmStart);
+      document.removeEventListener('touchstart', bgmStart);
+      document.removeEventListener('keydown', bgmStart);
+    }
+    document.addEventListener('click', bgmStart);
+    document.addEventListener('touchstart', bgmStart);
+    document.addEventListener('keydown', bgmStart);
+  });
 </script>
 </body>
 </html>
