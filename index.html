@@ -1594,7 +1594,7 @@
 
   /* ===== BGM ===== */
   const BGM_TRACKS = [
-    "bgm/EXO-01-Crown-REVERXE - The 8th Album-16.flac",
+    "bgm/EXO-01-Crown-REVERXE - The 8th Album-192.mp3",
     "bgm/EXO-02-Back It Up-REVERXE - The 8th Album-192.mp3",
     "bgm/EXO-03-Crazy-REVERXE - The 8th Album-192.mp3",
     "bgm/EXO-04-Suffocate-REVERXE - The 8th Album-192.mp3",
@@ -1606,8 +1606,7 @@
   ];
   const bgmAudio = new Audio();
   bgmAudio.volume = 0.45;
-  /* Android는 FLAC 미지원 → 01번 건너뛰고 02번부터 */
-  let bgmIdx = bgmAudio.canPlayType('audio/flac') !== '' ? 0 : 1;
+  let bgmIdx = 0;
   let bgmStarted = false;
 
   function bgmPlay(idx) {
