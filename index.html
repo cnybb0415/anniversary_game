@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>EXO RUN</title>
+  <link rel="icon" href="image/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
   <style>
@@ -319,7 +320,6 @@
       filter: drop-shadow(0 0 10px rgba(255,215,0,0.65));
       background: rgba(255,255,255,0.04);
       border-radius: 4px;
-      overflow: hidden;
     }
     .cs-char-back-wrap {
       position: relative;
@@ -331,7 +331,6 @@
       outline: 2px solid rgba(255,255,255,0.22);
       background: rgba(255,255,255,0.03);
       border-radius: 4px;
-      overflow: hidden;
       opacity: 0.88;
     }
     .cs-char-front-wrap img,
@@ -349,6 +348,13 @@
       50%       { opacity: 0.58; }
     }
     .cs-char-ph {
+      position: absolute !important;
+      width: 170% !important;
+      height: 170% !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      object-fit: contain !important;
       mix-blend-mode: screen;
       image-rendering: auto !important;
       animation: powerGlow 2.8s ease-in-out infinite;
