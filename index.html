@@ -1604,32 +1604,47 @@
     "bgm/EXO-08-Flatline-REVERXE - The 8th Album-192.mp3",
     "bgm/EXO-09-I'm Home-REVERXE - The 8th Album-192.mp3",
   ];
-  let bgmIdx = 0;
   const bgmAudio = new Audio();
   bgmAudio.volume = 0.45;
+  /* Android는 FLAC 미지원 → 01번 건너뛰고 02번부터 */
+  let bgmIdx = bgmAudio.canPlayType('audio/flac') !== '' ? 0 : 1;
+  let bgmStarted = false;
 
-  function bgmPlay() {
+  function bgmPlay(idx) {
+    if (idx !== undefined) bgmIdx = idx;
     bgmAudio.src = BGM_TRACKS[bgmIdx];
+    bgmAudio.load();
     bgmAudio.play().catch(() => {});
   }
 
+  /* 트랙 끝 → 다음 트랙 */
   bgmAudio.addEventListener('ended', () => {
-    bgmIdx = (bgmIdx + 1) % BGM_TRACKS.length;
-    bgmPlay();
+    bgmPlay((bgmIdx + 1) % BGM_TRACKS.length);
   });
 
-  /* 첫 번째 사용자 인터랙션 때 재생 시작 (브라우저 autoplay 정책 대응) */
-  bgmAudio.src = BGM_TRACKS[0];
-  bgmAudio.play().catch(() => {
-    function bgmStart() {
-      bgmAudio.play().catch(() => {});
-      document.removeEventListener('click', bgmStart);
-      document.removeEventListener('touchstart', bgmStart);
-      document.removeEventListener('keydown', bgmStart);
-    }
-    document.addEventListener('click', bgmStart);
-    document.addEventListener('touchstart', bgmStart);
-    document.addEventListener('keydown', bgmStart);
+  /* 포맷 오류(FLAC 미지원 등) → 다음 트랙으로 */
+  bgmAudio.addEventListener('error', () => {
+    if (bgmStarted) bgmPlay((bgmIdx + 1) % BGM_TRACKS.length);
+  });
+
+  function bgmStart() {
+    if (bgmStarted) return;
+    bgmStarted = true;
+    /* iOS 필수: 제스처 핸들러 내에서 src·load·play 동기 호출 */
+    bgmAudio.src = BGM_TRACKS[bgmIdx];
+    bgmAudio.load();
+    bgmAudio.play().catch(() => { bgmStarted = false; });
+  }
+
+  /* 데스크탑: 즉시 재생 시도 */
+  bgmAudio.src = BGM_TRACKS[bgmIdx];
+  bgmAudio.play().then(() => {
+    bgmStarted = true;
+  }).catch(() => {
+    /* 모바일: 첫 터치/클릭 시 재생 ({ once:true } 로 한 번만) */
+    document.addEventListener('touchstart', bgmStart, { once: true, passive: true });
+    document.addEventListener('click',      bgmStart, { once: true });
+    document.addEventListener('keydown',    bgmStart, { once: true });
   });
 </script>
 </body>
