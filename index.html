@@ -1097,6 +1097,12 @@
     /* 이벤트 (중복 방지) */
     canvas.onclick     = handleJump;
     canvas.ontouchstart = (e) => { e.preventDefault(); handleJump(); };
+    /* 캔버스 밖 빈 영역 터치도 점프 인식 */
+    document.getElementById('game-page').ontouchstart = (e) => {
+      if (e.target.closest('button, .game-overlay')) return;
+      e.preventDefault();
+      handleJump();
+    };
 
     cancelAnimationFrame(gAnimId);
     loop();
