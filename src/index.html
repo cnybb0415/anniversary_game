@@ -858,9 +858,9 @@
           }
         }
 
-        /* 상위 10개 출력 */
+        /* 상위 20개 출력 */
         let html = '';
-        data.slice(0, 10).forEach((row, i) => {
+        data.slice(0, 20).forEach((row, i) => {
           const isMe = (myRank === i + 1);
           html += `<div class="lb-row${isMe ? ' me' : ''}">
             <span class="lb-rank">#${i + 1}</span>
@@ -869,8 +869,8 @@
           </div>`;
         });
 
-        /* 10등 밖이면 내 등수를 구분선 아래 따로 표시 */
-        if (myRank > 10) {
+        /* 20등 밖이면 내 등수를 구분선 아래 따로 표시 */
+        if (myRank > 20) {
           html += `<div class="lb-row lb-dots"><span>···</span><span></span><span></span></div>`;
           html += `<div class="lb-row me">
             <span class="lb-rank">#${myRank}</span>
