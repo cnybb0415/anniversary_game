@@ -483,9 +483,9 @@
       width: 100%;
       max-width: 420px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 16px 6px;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 10px 16px 4px;
       position: relative;
       z-index: 20;
     }
@@ -494,7 +494,7 @@
       font-size: clamp(8px, 2.8vw, 11px);
     }
     .hud-score { color: #ffd700; }
-    .hud-hi    { color: #6bcfff; }
+    .hud-hi    { color: #6bcfff; margin-bottom: 4px; }
     #game-canvas {
       display: block;
       width: 100%;
@@ -787,8 +787,8 @@
   <button class="game-back-btn" onclick="exitGame()">← MENU</button>
 
   <div class="game-hud">
-    <span class="hud-score">SCORE&nbsp;<span id="score-val">0</span></span>
     <span class="hud-hi">BEST&nbsp;<span id="best-val">0</span></span>
+    <span class="hud-score">SCORE&nbsp;<span id="score-val">0</span></span>
   </div>
 
   <canvas id="game-canvas"></canvas>
