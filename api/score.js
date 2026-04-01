@@ -1,28 +1,50 @@
-// Vercel 서버리스 함수 — Apps Script URL을 환경변수로 숨김
+// Vercel 서버리스 함수 — Supabase REST API 사용
 export default async function handler(req, res) {
-  const scriptUrl = process.env.APPS_SCRIPT_URL;
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-  if (!scriptUrl) {
-    return res.status(503).json({ error: 'APPS_SCRIPT_URL not configured' });
+  if (!supabaseUrl || !supabaseKey) {
+    return res.status(503).json({ error: 'Supabase env not configured' });
   }
 
-  const params = new URLSearchParams(req.query);
+  const headers = {
+    'apikey': supabaseKey,
+    'Authorization': `Bearer ${supabaseKey}`,
+    'Content-Type': 'application/json',
+  };
+
   const action = req.query.action;
 
   try {
-    const response = await fetch(`${scriptUrl}?${params.toString()}`);
-    const data = await response.json();
-
-    // load: CDN 30초 캐싱 → 동시 요청 몰려도 함수 1번만 실행
-    // save: 캐싱 없음
     if (action === 'load') {
-      res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
-    } else {
+      const response = await fetch(
+        `${supabaseUrl}/rest/v1/scores?select=character,score&order=score.desc`,
+        { headers }
+      );
+      const data = await response.json();
       res.setHeader('Cache-Control', 'no-store');
-    }
+      return res.status(200).json(data);
 
-    res.status(200).json(data);
-  } catch {
-    res.status(500).json({ error: 'Failed to reach score server' });
+    } else if (action === 'save') {
+      const { character, score, datetime } = req.query;
+      const response = await fetch(
+        `${supabaseUrl}/rest/v1/scores`,
+        {
+          method: 'POST',
+          headers: { ...headers, 'Prefer': 'return=minimal' },
+          body: JSON.stringify({ character, score: parseInt(score), datetime }),
+        }
+      );
+      if (!response.ok) {
+        const err = await response.text();
+        return res.status(500).json({ error: err });
+      }
+      return res.status(200).json({ result: 'success' });
+
+    } else {
+      return res.status(400).json({ error: 'Invalid action' });
+    }
+  } catch (e) {
+    res.status(500).json({ error: 'Failed to reach Supabase' });
   }
 }
