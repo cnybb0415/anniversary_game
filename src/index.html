@@ -841,26 +841,17 @@
     const myChar = CHAR_NAMES[selectedCharIdx];
 
     content.innerHTML = '<div class="lb-msg">Loading...</div>';
-    fetch(`${SCORE_API}?action=load`)
+    fetch(`${SCORE_API}?action=load&character=${encodeURIComponent(myChar)}&score=${myScore}`)
       .then(r => r.json())
-      .then(data => {
-        if (!data || !data.length) {
+      .then(({ top, myRank }) => {
+        if (!top || !top.length) {
           content.innerHTML = '<div class="lb-msg">아직 기록이 없습니다</div>';
           return;
         }
 
-        /* 내 등수: 점수+캐릭터가 처음 일치하는 인덱스 */
-        let myRank = -1;
-        for (let i = 0; i < data.length; i++) {
-          if (Number(data[i].score) === myScore && data[i].character === myChar) {
-            myRank = i + 1;
-            break;
-          }
-        }
-
         /* 상위 20개 출력 */
         let html = '';
-        data.slice(0, 20).forEach((row, i) => {
+        top.forEach((row, i) => {
           const isMe = (myRank === i + 1);
           html += `<div class="lb-row${isMe ? ' me' : ''}">
             <span class="lb-rank">#${i + 1}</span>
@@ -870,10 +861,11 @@
         });
 
         /* 20등 밖이면 내 등수를 구분선 아래 따로 표시 */
-        if (myRank > 20) {
+        if (!myRank || myRank > 20) {
           html += `<div class="lb-row lb-dots"><span>···</span><span></span><span></span></div>`;
+          const rankLabel = myRank ? `#${myRank}` : '-';
           html += `<div class="lb-row me">
-            <span class="lb-rank">#${myRank}</span>
+            <span class="lb-rank">${rankLabel}</span>
             <span class="lb-char">${myChar}</span>
             <span class="lb-sc">${myScore}</span>
           </div>`;
