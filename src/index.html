@@ -824,7 +824,7 @@
   ============================================== */
   const SCORE_API = '/api/score';
 
-  const CHAR_NAMES = ['SUHO', 'LAY', 'CHANYEOL', 'D.O', 'KAI', 'SEHUN'];
+  const CHAR_NAMES = ['SUHO', 'LAY', 'CHANYEOL', 'D.O.', 'KAI', 'SEHUN'];
   const CHAR_EMOJIS = ['💧', '🌿', '🔥', '💪', '⚡', '🌀'];
 
   function submitScore(charIdx, finalScore) {
@@ -945,7 +945,7 @@
     { name: 'SUHO',     power: '물',      emoji: '💧', powerImg: 'image/물.png',      front: 'character/suho.webp',     back: 'character/suho_back.webp',     right: 'character/suho_right.webp',     jump: 'character/suho_jump.webp'     },
     { name: 'LAY',      power: '치유',    emoji: '🌿', powerImg: 'image/치유.png',     front: 'character/lay.webp',      back: 'character/lay_back.webp',      right: 'character/lay_right.webp',      jump: 'character/lay_jump.webp'      },
     { name: 'CHANYEOL', power: '불',      emoji: '🔥', powerImg: 'image/불.png',       front: 'character/chanyeol.webp', back: 'character/chanyeol_back.webp', right: 'character/chanyeol_right.webp', jump: 'character/chanyeol_jump.webp' },
-    { name: 'D.O',      power: '힘',      emoji: '💪', powerImg: 'image/힘.png',       front: 'character/do.webp',       back: 'character/do_back.webp',       right: 'character/do_right.webp',       jump: 'character/do_jump.webp'       },
+    { name: 'D.O.',      power: '힘',      emoji: '💪', powerImg: 'image/힘.png',       front: 'character/do.webp',       back: 'character/do_back.webp',       right: 'character/do_right.webp',       jump: 'character/do_jump.webp'       },
     { name: 'KAI',      power: '순간이동', emoji: '💫', powerImg: 'image/순간이동.png', front: 'character/kai.webp',      back: 'character/kai_back.webp',      right: 'character/kai_right.webp',      jump: 'character/kai_jump.webp'      },
     { name: 'SEHUN',    power: '바람',    emoji: '🌀', powerImg: 'image/바람.png',     front: 'character/sehun.webp',    back: 'character/sehun_back.webp',    right: 'character/sehun_right.webp',    jump: 'character/sehun_jump.webp'    },
   ];
@@ -1355,7 +1355,7 @@
     }
   }
 
-  // 순서: SUHO(물), LAY(치유), CHANYEOL(불), D.O(힘), KAI(순간이동), SEHUN(바람)
+  // 순서: SUHO(물), LAY(치유), CHANYEOL(불), D.O.(힘), KAI(순간이동), SEHUN(바람)
   const CHAR_COLORS = ['#4499ff', '#88ffcc', '#ff6633', '#ff44aa', '#cc55ff', '#88ddff'];
 
   function drawPixelPlayer(ctx, x, y) {
