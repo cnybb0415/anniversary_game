@@ -709,19 +709,29 @@
       <span class="cy">★</span><span class="cp">✦</span><span class="cb">★</span>
       <span class="cy">✦</span><span class="cp">★</span>
     </div>
-    <div class="pixel-title">
-      <span class="row1">PRESS</span>
-      <span class="row2">START</span>
+    <div id="main-press-start">
+      <div class="pixel-title">
+        <span class="row1">PRESS</span>
+        <span class="row2">START</span>
+      </div>
+      <div class="rainbow-bar"></div>
+      <div class="star-row">
+        <span class="cb">★</span><span class="cy">✦</span><span class="cp">★</span>
+        <span class="cb">✦</span><span class="cy">★</span>
+      </div>
+      <div class="name-row">
+        <span class="name-tag">EXO Debut 14th Anniversary</span>
+      </div>
+      <button class="start-btn" onclick="goTo('char-select-page')">START</button>
     </div>
-    <div class="rainbow-bar"></div>
-    <div class="star-row">
-      <span class="cb">★</span><span class="cy">✦</span><span class="cp">★</span>
-      <span class="cb">✦</span><span class="cy">★</span>
+    <div id="main-ended" style="display:none; text-align:center;">
+      <div class="pixel-title">
+        <span class="row1">GAME</span>
+        <span class="row2">OVER</span>
+      </div>
+      <div class="rainbow-bar"></div>
+      <p style="font-family:'Press Start 2P',monospace; font-size:7px; color:rgba(255,255,255,0.7); line-height:2; margin-top:16px;">EXO Debut 14th Anniversary<br>TO BE CONTINUED<br>
     </div>
-    <div class="name-row">
-      <span class="name-tag">EXO Debut 14th Anniversary</span>
-    </div>
-    <button class="start-btn" onclick="goTo('char-select-page')">START</button>
     <p class="copy-text">ⓒEXOREBIRTH_DEV<br>ALL RIGHTS RESERVED</p>
   </div>
 </div><!-- /main-page -->
@@ -1593,6 +1603,37 @@
   document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; });
   document.getElementById('main-page').style.display = 'flex';
 
+  /* ===== 종료 시각: 2026-04-16 00:00:00 KST ===== */
+  const END_TIME = new Date('2026-04-16T00:00:00+09:00');
+
+  function applyExpired() {
+    /* 게임 루프 중단 */
+    cancelAnimationFrame(gAnimId);
+    gAnimId = null;
+    /* BGM → Flatline 으로 전환 */
+    bgmAudio.pause();
+    bgmAudio.src = 'bgm/EXO-08-Flatline-REVERXE - The 8th Album-192.mp3';
+    bgmAudio.loop = true;
+    bgmAudio.load();
+    bgmAudio.play().catch(() => {});
+    /* 메인 화면으로 강제 이동 */
+    document.querySelectorAll('.page').forEach(p => { p.style.display = 'none'; });
+    document.getElementById('main-page').style.display = 'flex';
+    window.scrollTo(0, 0);
+    /* 종료 UI 표시 */
+    document.getElementById('main-press-start').style.display = 'none';
+    document.getElementById('main-ended').style.display = 'block';
+  }
+
+  function checkExpiry() {
+    if (new Date() >= END_TIME) {
+      applyExpired();
+      clearInterval(expiryTimer);
+    }
+  }
+
+  const expiryTimer = setInterval(checkExpiry, 1000);
+
   /* ===== BGM ===== */
   const BGM_TRACKS = [
     "bgm/EXO-01-Crown-REVERXE - The 8th Album-192.mp3",
@@ -1646,6 +1687,9 @@
     document.addEventListener('click',      bgmStart, { once: true });
     document.addEventListener('keydown',    bgmStart, { once: true });
   });
+
+  /* BGM 초기화 후 즉시 종료 여부 체크 */
+  checkExpiry();
 </script>
 </body>
 </html>
