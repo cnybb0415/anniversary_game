@@ -82,7 +82,7 @@
       display: flex;
       align-items: flex-end;
       justify-content: center;
-      gap: 3px;
+      gap: 6px;
       margin: 28px 0 32px;
       padding: 0 2px;
     }
@@ -139,16 +139,6 @@
       color: #ffd700;
     }
 
-    .pedestal {
-      width: 100%;
-      border-radius: 3px 3px 0 0;
-    }
-    .ped-1 { background: linear-gradient(180deg, #ffe566 0%, #c8960a 100%); box-shadow: 0 0 12px #ffd70066; }
-    .ped-2 { background: linear-gradient(180deg, #e8e8e8 0%, #888 100%); }
-    .ped-3 { background: linear-gradient(180deg, #e8a060 0%, #7a3e10 100%); }
-    .ped-4 { background: linear-gradient(180deg, #7090dd 0%, #223388 100%); }
-    .ped-5 { background: linear-gradient(180deg, #bb77ff 0%, #551199 100%); }
-    .ped-6 { background: linear-gradient(180deg, #66ddaa 0%, #1a6644 100%); }
 
     /* ===== Leaderboard ===== */
     .lb-section {
@@ -271,7 +261,6 @@
             <div class="char-name">${char.character}</div>
             <div class="char-score">${char.score}</div>
           </div>
-          <div class="pedestal ${PED_CLASS[rankIdx]}" style="height:${pedH}px;"></div>
         </div>`;
     });
 
