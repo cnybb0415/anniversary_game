@@ -59,6 +59,28 @@ export default async function handler(req, res) {
       }
       return res.status(200).json({ result: 'success' });
 
+    } else if (action === 'result') {
+      const charNames = ['SUHO', 'LAY', 'CHANYEOL', 'D.O.', 'KAI', 'SEHUN'];
+
+      const [charBests, top20Data] = await Promise.all([
+        Promise.all(charNames.map(async (char) => {
+          const r = await fetch(
+            `${supabaseUrl}/rest/v1/scores?select=character,score&character=eq.${encodeURIComponent(char)}&order=score.desc&limit=1`,
+            { headers }
+          );
+          const d = await r.json();
+          return d[0] || { character: char, score: 0 };
+        })),
+        fetch(
+          `${supabaseUrl}/rest/v1/scores?select=character,score&order=score.desc&limit=20`,
+          { headers }
+        ).then(r => r.json()),
+      ]);
+
+      charBests.sort((a, b) => b.score - a.score);
+      res.setHeader('Cache-Control', 's-maxage=30, stale-while-revalidate=60');
+      return res.status(200).json({ characters: charBests, top20: top20Data });
+
     } else {
       return res.status(400).json({ error: 'Invalid action' });
     }

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>EXO RUN — RESULT</title>
+  <link rel="icon" href="image/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #07071a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      font-family: 'Press Start 2P', monospace;
+      overflow-x: hidden;
+    }
+
+    #app {
+      width: 100%;
+      max-width: 480px;
+      padding: 0 10px 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== Stars ===== */
+    #stars-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .star-dot {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--d, 2s) var(--delay, 0s) infinite alternate;
+    }
+    @keyframes twinkle {
+      from { opacity: 0.15; }
+      to   { opacity: 0.85; }
+    }
+
+    /* ===== Header ===== */
+    .header {
+      text-align: center;
+      padding: 30px 0 18px;
+    }
+    .header-title {
+      font-size: clamp(18px, 5.5vw, 26px);
+      background: linear-gradient(90deg, #ff9bd0, #ffd700, #6bcfff, #ff9bd0);
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow 3s linear infinite;
+      letter-spacing: 6px;
+    }
+    @keyframes rainbow {
+      0%   { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+    .header-sub {
+      font-size: clamp(6px, 1.8vw, 8px);
+      color: rgba(255,255,255,0.45);
+      margin-top: 10px;
+      letter-spacing: 3px;
+    }
+    .rainbow-bar {
+      height: 3px;
+      background: linear-gradient(90deg, #ff9bd0, #ffd700, #6bcfff, #ff44cc, #ffd700);
+      border-radius: 2px;
+      margin: 14px auto 0;
+      max-width: 200px;
+    }
+
+    /* ===== Podium ===== */
+    .podium-wrap {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 3px;
+      margin: 28px 0 32px;
+      padding: 0 2px;
+    }
+
+    .char-slot {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .char-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 5px;
+      width: 100%;
+    }
+
+    .rank-badge {
+      font-size: clamp(5px, 1.5vw, 7px);
+      padding: 2px 5px;
+      border-radius: 3px;
+      color: #000;
+    }
+    .rank-1 { background: #FFD700; }
+    .rank-2 { background: #D0D0D0; }
+    .rank-3 { background: #CD7F32; color: #fff; }
+    .rank-4, .rank-5, .rank-6 { background: #334; color: #6bcfff; border: 1px solid #6bcfff44; }
+
+    .char-img {
+      width: 100%;
+      max-width: 62px;
+      height: 82px;
+      object-fit: contain;
+      object-position: bottom center;
+      image-rendering: auto;
+    }
+
+    .char-name {
+      font-size: clamp(4px, 1.3vw, 6px);
+      color: rgba(255,255,255,0.85);
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    .char-score {
+      font-size: clamp(5px, 1.5vw, 7px);
+      color: #ffd700;
+    }
+
+    .pedestal {
+      width: 100%;
+      border-radius: 3px 3px 0 0;
+    }
+    .ped-1 { background: linear-gradient(180deg, #ffe566 0%, #c8960a 100%); box-shadow: 0 0 12px #ffd70066; }
+    .ped-2 { background: linear-gradient(180deg, #e8e8e8 0%, #888 100%); }
+    .ped-3 { background: linear-gradient(180deg, #e8a060 0%, #7a3e10 100%); }
+    .ped-4 { background: linear-gradient(180deg, #7090dd 0%, #223388 100%); }
+    .ped-5 { background: linear-gradient(180deg, #bb77ff 0%, #551199 100%); }
+    .ped-6 { background: linear-gradient(180deg, #66ddaa 0%, #1a6644 100%); }
+
+    /* ===== Leaderboard ===== */
+    .lb-section {
+      background: rgba(12, 12, 44, 0.92);
+      border: 2px solid rgba(100, 100, 255, 0.25);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .lb-head {
+      font-size: clamp(8px, 2.5vw, 10px);
+      text-align: center;
+      padding: 12px 8px 10px;
+      color: #ffd700;
+      border-bottom: 1px solid rgba(100,100,255,0.2);
+      letter-spacing: 2px;
+    }
+    .lb-row {
+      display: grid;
+      grid-template-columns: 52px 1fr 60px;
+      gap: 4px;
+      align-items: center;
+      padding: 6px 10px;
+      font-size: clamp(5px, 1.5vw, 7px);
+      color: rgba(255,255,255,0.55);
+      border-bottom: 1px solid rgba(100,100,255,0.1);
+    }
+    .lb-row:last-child { border-bottom: none; }
+    .lb-row.top1 { color: #ffd700; background: rgba(255,215,0,0.07); }
+    .lb-row.top2 { color: #d8d8d8; }
+    .lb-row.top3 { color: #cd9060; }
+    .lb-rank { color: #6bcfff; }
+    .lb-rank.r1 { color: #ffd700; }
+    .lb-rank.r2 { color: #d0d0d0; }
+    .lb-rank.r3 { color: #cd7f32; }
+    .lb-sc   { color: #ff9bd0; text-align: right; }
+  </style>
+</head>
+<body>
+<div id="stars-bg"></div>
+<div id="app">
+
+  <div class="header">
+    <div class="header-title">EXO RUN</div>
+    <div class="header-sub">14TH ANNIVERSARY RESULT</div>
+    <div class="rainbow-bar"></div>
+  </div>
+
+  <div id="podium" class="podium-wrap">
+    <div style="color:rgba(255,255,255,0.3);font-size:7px;padding:30px 0;">Loading...</div>
+  </div>
+
+  <div class="lb-section">
+    <div class="lb-head">🏆 BEST SCORES TOP 20</div>
+    <div id="lb-content" style="padding:14px;text-align:center;font-size:7px;color:rgba(255,255,255,0.35);">Loading...</div>
+  </div>
+
+</div>
+<script>
+  /* Stars */
+  (function () {
+    const wrap = document.getElementById('stars-bg');
+    for (let i = 0; i < 90; i++) {
+      const s = document.createElement('div');
+      s.className = 'star-dot';
+      const sz = Math.random() * 2.4 + 0.7;
+      s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${(Math.random()*3+1.2).toFixed(2)}s;--delay:${(Math.random()*3).toFixed(2)}s;`;
+      wrap.appendChild(s);
+    }
+  })();
+
+  const CHAR_IMG = {
+    'SUHO':     'character/suho.webp',
+    'LAY':      'character/lay.webp',
+    'CHANYEOL': 'character/chanyeol.webp',
+    'D.O.':     'character/do.webp',
+    'KAI':      'character/kai.webp',
+    'SEHUN':    'character/sehun.webp',
+  };
+
+  /* 시각 배치 순서: 5등, 3등, 1등, 2등, 4등, 6등 → 인덱스 기준 */
+  const VISUAL_ORDER = [4, 2, 0, 1, 3, 5];
+  /* 각 시각 위치의 단상 높이 (px) */
+  const PED_H        = [44, 70, 112, 88, 54, 32];
+  /* 등수별 단상 클래스 */
+  const PED_CLASS    = ['ped-1', 'ped-2', 'ped-3', 'ped-4', 'ped-5', 'ped-6'];
+  /* 등수별 뱃지 클래스 */
+  const BADGE_CLASS  = ['rank-1', 'rank-2', 'rank-3', 'rank-4', 'rank-5', 'rank-6'];
+  /* lb-rank 색상 클래스 */
+  const RANK_CLASS   = ['r1', 'r2', 'r3', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+
+  fetch('/api/score?action=result')
+    .then(r => r.json())
+    .then(({ characters, top20 }) => {
+      renderPodium(characters);
+      renderLeaderboard(top20);
+    })
+    .catch(() => {
+      document.getElementById('podium').innerHTML =
+        '<p style="color:#ff6666;font-size:7px;padding:20px 0;">데이터 로딩 실패</p>';
+      document.getElementById('lb-content').innerHTML =
+        '<p style="color:#ff6666;">데이터 로딩 실패</p>';
+    });
+
+  function renderPodium(chars) {
+    const podium = document.getElementById('podium');
+    if (!chars || !chars.length) return;
+
+    let html = '';
+    VISUAL_ORDER.forEach((rankIdx, visualPos) => {
+      const char    = chars[rankIdx] || { character: '???', score: 0 };
+      const rank    = rankIdx + 1;
+      const pedH    = PED_H[visualPos];
+      const imgSrc  = CHAR_IMG[char.character] || '';
+
+      html += `
+        <div class="char-slot">
+          <div class="char-info">
+            <div class="rank-badge ${BADGE_CLASS[rankIdx]}">#${rank}</div>
+            <img class="char-img" src="${imgSrc}" alt="${char.character}" onerror="this.style.opacity=0.2">
+            <div class="char-name">${char.character}</div>
+            <div class="char-score">${char.score}</div>
+          </div>
+          <div class="pedestal ${PED_CLASS[rankIdx]}" style="height:${pedH}px;"></div>
+        </div>`;
+    });
+
+    podium.innerHTML = html;
+  }
+
+  function renderLeaderboard(top20) {
+    const content = document.getElementById('lb-content');
+    if (!top20 || !top20.length) {
+      content.innerHTML = '<div style="padding:12px;text-align:center;">기록 없음</div>';
+      return;
+    }
+    const rowClass = ['top1', 'top2', 'top3'];
+    const rkClass  = ['r1',   'r2',   'r3'];
+    let html = '';
+    top20.forEach((row, i) => {
+      html += `<div class="lb-row ${rowClass[i] || ''}">
+        <span class="lb-rank ${rkClass[i] || ''}">#${i + 1}</span>
+        <span>${row.character || '???'}</span>
+        <span class="lb-sc">${row.score}</span>
+      </div>`;
+    });
+    content.innerHTML = html;
+    content.style.padding = '0';
+  }
+</script>
+</body>
+</html>
